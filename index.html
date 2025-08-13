@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANSAR | Version Or</title>
+    <title>ANSAR</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,53 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            transition: opacity 0.5s ease;
+            transition: all 0.5s ease;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.6),
+                inset 0 0 10px rgba(255, 255, 255, 0.8);
+            border: 2px solid white;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            transform: rotate(15deg) scale(1.1);
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.8),
+                inset 0 0 15px rgba(255, 255, 255, 1);
+        }
+
+        .logo:active {
+            transform: rotate(0deg) scale(0.95);
+        }
+
+        .logo-img {
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px dashed white;
+            pointer-events: none;
         }
 
         .container {
@@ -37,6 +83,9 @@
             border: 1px solid rgba(255, 215, 0, 0.3);
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
             margin: 10px;
+            opacity: 1;
+            transform: scale(1);
+            transition: all 0.5s ease;
         }
 
         h1 {
@@ -71,6 +120,8 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn:hover {
@@ -78,22 +129,69 @@
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
         }
 
-        /* Animation de sortie */
-        .exit-animation {
-            animation: fadeOut 0.5s forwards;
+        /* Animation futuriste */
+        .future-exit {
+            animation: futureExit 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
         }
 
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                transform: scale(0.9);
+        @keyframes futureExit {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
             }
+            50% {
+                opacity: 0.8;
+                transform: scale(0.95);
+                filter: blur(1px);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2) rotate(5deg);
+                filter: blur(3px);
+            }
+        }
+
+        /* Particules futuristes */
+        .particle {
+            position: absolute;
+            background: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 20;
+            animation: particleFade 1s forwards;
+        }
+
+        @keyframes particleFade {
+            to {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Animation de rafraîchissement */
+        .refresh-animation {
+            animation: refreshSpin 0.5s linear;
+        }
+
+        @keyframes refreshSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(0.8); }
+            100% { transform: rotate(360deg) scale(1); }
         }
 
         @media (max-width: 480px) {
             h1 { font-size: 1.8rem; }
             h2 { font-size: 1.1rem; }
             .btn { padding: 10px 15px; font-size: 0.8rem; }
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            .logo-img {
+                width: 80%;
+                height: 80%;
+            }
         }
 
         @media (min-width: 768px) {
@@ -103,9 +201,15 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="logo-container">
+        <div class="logo" id="refreshLogo">
+            <img src="logo.png" alt="Logo ANSAR" class="logo-img">
+        </div>
+    </div>
+
+    <div class="container" id="mainContainer">
         <h1>SALAM ALEYKOUM</h1>
-        <h2>BIENVENUE DANS ANSAR</h2> 
+        <h2>BIENVENUE DANS ANSAR</h2>
         
         <div class="buttons">
             <button class="btn" data-url="https://ansaralmouyassar.github.io/web/">APPLICATION VERSION WEB</button>
@@ -116,27 +220,91 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const buttons = document.querySelectorAll('.btn');
+            const refreshLogo = document.getElementById('refreshLogo');
+            const mainContainer = document.getElementById('mainContainer');
             
+            // Gestion du rafraîchissement au clic sur le logo
+            refreshLogo.addEventListener('click', function() {
+                // Animation de rotation
+                this.classList.add('refresh-animation');
+                
+                // Rafraîchissement après l'animation
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+                
+                // Réinitialisation de l'animation
+                setTimeout(() => {
+                    this.classList.remove('refresh-animation');
+                }, 1000);
+            });
+            
+            // Réinitialisation au retour sur la page
+            window.onpageshow = function(event) {
+                if (event.persisted) {
+                    mainContainer.style.opacity = "1";
+                    mainContainer.style.transform = "scale(1)";
+                    mainContainer.style.filter = "blur(0)";
+                    document.body.style.backgroundColor = "#1f4a49";
+                }
+            };
+
+            // Gestion des boutons
             buttons.forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
                     const url = this.getAttribute('data-url');
                     
-                    // Animation de sortie
-                    document.body.classList.add('exit-animation');
+                    // Créer des particules futuristes
+                    createParticles(e);
                     
-                    // Ouvrir dans un nouvel onglet après un léger délai
+                    // Animation futuriste
+                    mainContainer.classList.add('future-exit');
+                    document.body.style.backgroundColor = "#000";
+                    
+                    // Ouvrir dans un nouvel onglet après un délai
                     setTimeout(() => {
                         window.open(url, '_blank').focus();
-                    }, 300);
-                    
-                    // Fermer l'onglet courant après 1s (peut ne pas fonctionner selon les navigateurs)
-                    setTimeout(() => {
-                        window.close();
-                    }, 1000);
+                    }, 500);
                 });
             });
+
+            function createParticles(event) {
+                const colors = ['#FFD700', '#FFA500', '#FFFFFF', '#1f4a49'];
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    const size = Math.random() * 10 + 5;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    const x = event.clientX;
+                    const y = event.clientY;
+                    particle.style.left = `${x}px`;
+                    particle.style.top = `${y}px`;
+                    
+                    // Direction aléatoire
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * 100 + 50;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+                    
+                    particle.style.setProperty('--tx', `${tx}px`);
+                    particle.style.setProperty('--ty', `${ty}px`);
+                    
+                    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.animationDelay = `${Math.random() * 0.2}s`;
+                    
+                    document.body.appendChild(particle);
+                    
+                    // Supprimer après l'animation
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 1000);
+                }
+            }
         });
     </script>
 </body>
-</html> 
+</html>
